@@ -56,6 +56,9 @@ option(ENABLE_DEMO
   "Enable building demo applications"
   ON
 )
+option(ENABLE_STATIC
+  "Build statically"
+)
 
 ####################################
 # bootstrap
@@ -102,6 +105,10 @@ if(ENABLE_CYCLIC_CHECK)
   set(DEFINE_USE_CYCLIC_CHECK "define")
 else()
   set(DEFINE_USE_CYCLIC_CHECK "undef")
+endif()
+
+if(NOT ENABLE_STATIC)
+    add_definitions(-DLPP_HAVE_DLL)
 endif()
 
 ####################################
