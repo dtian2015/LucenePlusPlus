@@ -62,8 +62,11 @@ int main(int argc, char* argv[]) {
 
     setTestDir(testDir);
 
-    testing::InitGoogleTest(&argc, argv);
-    testing::AddGlobalTestEnvironment(new LuceneGlobalFixture());
+	// set dictionary environment
+	MiscUtils::SetEnvironmentVar("LUCENE_DICT_PATH", ASIAN_DICT_DIR);
 
-    return RUN_ALL_TESTS();
+	testing::InitGoogleTest(&argc, argv);
+	testing::AddGlobalTestEnvironment(new LuceneGlobalFixture());
+
+	return RUN_ALL_TESTS();
 }

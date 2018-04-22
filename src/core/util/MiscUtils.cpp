@@ -132,4 +132,41 @@ int32_t MiscUtils::unsignedShift(int32_t num, int32_t shift) {
     return (shift & 0x1f) == 0 ? num : (((uint32_t)num >> 1) & 0x7fffffff) >> ((shift & 0x1f) - 1);
 }
 
+std::string MiscUtils::GetEnvironmentVar(const std::string& variable)
+{
+#if defined(_WIN32)
+	// This is needed to supress the warning for the use of getenv on windows,
+	// see http://msdn.microsoft.com/en-us/library/ttcz0bys.aspx
+
+	size_t valueSize;
+	getenv_s(&valueSize, nullptr, 0, variable.c_str());
+	if (valueSize == 0)
+	{
+		return "";
+	}
+
+	std::vector<char> value(valueSize);
+	getenv_s(&valueSize, &value[0], valueSize, variable.c_str());
+
+	return std::string(value.begin(), value.end());
+#else
+	char* envValue = getenv(variable.c_str());
+	return envValue == nullptr ? "" : envValue;
+#endif
+}
+
+void MiscUtils::SetEnvironmentVar(const std::string& variable, const std::string& value)
+{
+#if defined(_WIN32)
+	int result = _putenv_s(variable.c_str(), value.c_str());
+#else
+	int overwriteExisting = 1;
+	int result = setenv(variable.c_str(), value.c_str(), overwriteExisting);
+#endif
+
+	if (result != 0)
+	{
+		throw std::runtime_error("Failed to set environment " + variable + " to " + value);
+	}
+}
 }

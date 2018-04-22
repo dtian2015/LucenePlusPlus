@@ -4,10 +4,12 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "TestInc.h"
 #include "LuceneTestFixture.h"
 #include "ConcurrentMergeScheduler.h"
 #include "DateTools.h"
+#include "Random.h"
+#include "TestInc.h"
+#include "TestUtils.h"
 
 namespace Lucene {
 
@@ -30,4 +32,15 @@ void LuceneTestFixture::destructorBody() {
     }
 }
 
+int LuceneTestFixture::atLeast(int i)
+{
+	return atLeast(newLucene<Random>(), i);
+}
+
+int LuceneTestFixture::atLeast(const RandomPtr& random, int i)
+{
+	int min = i;
+	int max = min + (min / 2);
+	return nextInt(random, min, max);
+}
 }

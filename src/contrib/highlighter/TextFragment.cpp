@@ -60,6 +60,11 @@ void StringBuffer::append(const String& str) {
     buffer << str;
 }
 
+void StringBuffer::append(const wchar_t& c)
+{
+	buffer << c;
+}
+
 void StringBuffer::clear() {
     buffer.str(L"");
 }

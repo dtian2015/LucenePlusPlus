@@ -212,6 +212,8 @@ typedef boost::function<bool (const TermVectorEntryPtr&, const TermVectorEntryPt
 template < class KEY, class VALUE, class HASH = boost::hash<KEY>, class EQUAL = std::equal_to<KEY> > class SimpleLRUCache;
 typedef SimpleLRUCache< TermPtr, TermInfoPtr, luceneHash<TermPtr>, luceneEquals<TermPtr> > TermInfoCache;
 typedef boost::shared_ptr<TermInfoCache> TermInfoCachePtr;
+
+typedef boost::shared_ptr<long> Long;
 }
 
 #include "Synchronize.h"

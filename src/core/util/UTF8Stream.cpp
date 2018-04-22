@@ -51,8 +51,9 @@ inline bool UTF8Base::isLeadSurrogate(uint32_t cp) {
     return (cp >= LEAD_SURROGATE_MIN && cp <= LEAD_SURROGATE_MAX);
 }
 
-inline bool UTF8Base::isTrailSurrogate(uint32_t cp) {
-    return (cp >= TRAIL_SURROGATE_MIN && cp <= TRAIL_SURROGATE_MAX);
+bool UTF8Base::isTrailSurrogate(uint32_t cp)
+{
+	return (cp >= TRAIL_SURROGATE_MIN && cp <= TRAIL_SURROGATE_MAX);
 }
 
 inline bool UTF8Base::isValidCodePoint(uint32_t cp) {

@@ -130,6 +130,20 @@ public:
 
     /// Perform unsigned right-shift (left bits are zero filled)
     static int32_t unsignedShift(int32_t num, int32_t shift);
+
+	/**
+	 * Retrieve an environment variable
+	 * \param variable environment variable to retrieve the value of
+	 * \return environment variable value or empty string
+	 */
+	static std::string GetEnvironmentVar(const std::string& variable);
+
+	/**
+	 * Set an environment variable
+	 * \param environment variable to set
+	 * \param environment variable value
+	 */
+	static void SetEnvironmentVar(const std::string& variable, const std::string& value);
 };
 
 }

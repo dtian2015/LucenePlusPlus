@@ -28,10 +28,12 @@ add_definitions(-DLPP_BUILDING_LIB)
 if(ENABLE_STATIC)
     add_library(lucene++ STATIC
         ${lucene_sources}
+        ${lucene_headers}
     )
 else()
     add_library(lucene++ SHARED
         ${lucene_sources}
+        ${lucene_headers}
     )
 endif()
 

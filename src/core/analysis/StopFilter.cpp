@@ -4,19 +4,20 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
 #include "StopFilter.h"
 #include "CharArraySet.h"
-#include "TermAttribute.h"
+#include "CharTermAttribute.h"
+#include "LuceneInc.h"
 #include "PositionIncrementAttribute.h"
+#include "TermAttribute.h"
 
 namespace Lucene {
 
 StopFilter::StopFilter(bool enablePositionIncrements, const TokenStreamPtr& input, HashSet<String> stopWords, bool ignoreCase) : TokenFilter(input) {
     this->stopWords = newLucene<CharArraySet>(stopWords, ignoreCase);
     this->enablePositionIncrements = enablePositionIncrements;
-    termAtt = addAttribute<TermAttribute>();
-    posIncrAtt = addAttribute<PositionIncrementAttribute>();
+	termAtt = input->hasAttribute<CharTermAttribute>() ? addAttribute<CharTermAttribute>() : addAttribute<TermAttribute>();
+	posIncrAtt = addAttribute<PositionIncrementAttribute>();
 }
 
 StopFilter::StopFilter(bool enablePositionIncrements, const TokenStreamPtr& input, const CharArraySetPtr& stopWords, bool ignoreCase) : TokenFilter(input) {
