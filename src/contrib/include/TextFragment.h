@@ -57,6 +57,7 @@ public:
 	virtual String toString();
 	virtual int32_t length();
 	virtual void append(const String& str);
+	virtual void append(const wchar_t& c);
 	virtual void clear();
 };
 
