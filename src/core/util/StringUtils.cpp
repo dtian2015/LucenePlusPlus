@@ -13,6 +13,8 @@
 #include "Reader.h"
 #include "CharFolder.h"
 
+#include <regex>
+
 namespace Lucene {
 
 /// Maximum length of UTF encoding.
@@ -128,6 +130,23 @@ int32_t StringUtils::compareCase(const String& first, const String& second) {
 Collection<String> StringUtils::split(const String& str, const String& delim) {
 	std::vector<String> tokens;
 	boost::split(tokens, str, boost::is_any_of(delim.c_str()));
+	return Collection<String>::newInstance(tokens.begin(), tokens.end());
+}
+
+Collection<String> StringUtils::regexSplit(const String& str, const String& delimRegex)
+{
+	std::wregex rgx(delimRegex);
+
+	std::wsregex_token_iterator iter(str.begin(), str.end(), rgx, -1);
+	std::wsregex_token_iterator end;
+
+	std::vector<String> tokens;
+	while (iter != end)
+	{
+		tokens.push_back(*iter);
+		++iter;
+	}
+
 	return Collection<String>::newInstance(tokens.begin(), tokens.end());
 }
 

@@ -9,11 +9,18 @@
 
 #include "LuceneObject.h"
 
+#include "MiscUtils.h"
+
 namespace Lucene {
 
 class LPPAPI UnicodeUtil {
 public:
 	virtual ~UnicodeUtil();
+
+	static constexpr int UNI_SUR_HIGH_START = 0xD800;
+	static constexpr int UNI_SUR_HIGH_END = 0xDBFF;
+	static constexpr int UNI_SUR_LOW_START = 0xDC00;
+	static constexpr int UNI_SUR_LOW_END = 0xDFFF;
 
 public:
 	/// Return true if supplied character is alpha-numeric.
@@ -40,11 +47,15 @@ public:
 	/// Return true if supplied character is non-spacing.
 	static bool isNonSpacing(wchar_t c);
 
+	static bool isPunctuation(wchar_t c);
+
 	/// Return uppercase representation of a given character.
 	static wchar_t toUpper(wchar_t c);
 
 	/// Return lowercase representation of a given character.
 	static wchar_t toLower(wchar_t c);
+
+	static bool validUTF16String(const CharArray& s);
 };
 
 /// Utility class that contains utf8 and unicode translations.

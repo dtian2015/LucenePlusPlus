@@ -62,6 +62,9 @@ public:
 	/// Splits string using given delimiters
 	static Collection<String> split(const String& str, const String& delim);
 
+	/// Splits string using given regular expession delimiters
+	static Collection<String> regexSplit(const String& str, const String& delimRegex);
+
 	/// Convert the given string to int32_t.
 	static int32_t toInt(const String& value);
 

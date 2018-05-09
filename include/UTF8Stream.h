@@ -28,6 +28,9 @@ public:
 	static const wchar_t UNICODE_REPLACEMENT_CHAR;
 	static const wchar_t UNICODE_TERMINATOR;
 
+public:
+	static bool isTrailSurrogate(uint32_t cp);
+
 protected:
 	virtual uint32_t readNext() = 0;
 
@@ -36,7 +39,6 @@ protected:
 	bool isTrail(uint32_t b);
 	bool isSurrogate(uint32_t cp);
 	bool isLeadSurrogate(uint32_t cp);
-	bool isTrailSurrogate(uint32_t cp);
 	bool isValidCodePoint(uint32_t cp);
 	bool isOverlongSequence(uint32_t cp, int32_t length);
 };
