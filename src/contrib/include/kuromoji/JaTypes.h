@@ -48,19 +48,6 @@ DECLARE_SHARED_PTR(TokenInfoDictionary)
 DECLARE_SHARED_PTR(TokenInfoFST)
 DECLARE_SHARED_PTR(UnknownDictionary)
 DECLARE_SHARED_PTR(UserDictionary)
-
-static const std::string DICT_ENVIRONMENT = "LUCENE_DICT_PATH";
-
-static String GetDictionaryPath()
-{
-	const std::string dictEnv = MiscUtils::GetEnvironmentVar(DICT_ENVIRONMENT);
-	if (dictEnv.empty())
-	{
-		boost::throw_exception(RuntimeException(L"Japanese dictionary path is missing"));
-	}
-
-	return String(dictEnv.begin(), dictEnv.end());
-}
 }
 
 namespace TokenAttributes {

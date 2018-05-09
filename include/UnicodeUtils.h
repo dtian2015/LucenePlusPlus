@@ -56,6 +56,17 @@ public:
 	static wchar_t toLower(wchar_t c);
 
 	static bool validUTF16String(const CharArray& s);
+
+	static ByteArray getGB2312Bytes(wchar_t ch);
+
+	static String getStringFromGB2312Bytes(char* bytes, int size);
+
+	// Daniel TODO: remove following two functions here and in .cpp
+	static short getGB2312Id(wchar_t ch);
+
+	static String getCCByGB2312Id(int ccid);
+
+	static String toString(const std::u16string& u16Str);
 };
 
 /// Utility class that contains utf8 and unicode translations.

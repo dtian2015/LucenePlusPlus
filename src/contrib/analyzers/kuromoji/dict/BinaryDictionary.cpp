@@ -31,7 +31,7 @@ String BinaryDictionary::DICT_PATH;
 
 BinaryDictionary::BinaryDictionary()
 {
-	DICT_PATH = GetDictionaryPath();
+	DICT_PATH = MiscUtils::GetAsianDictionaryPath();
 }
 
 void BinaryDictionary::initializeDictionaries()

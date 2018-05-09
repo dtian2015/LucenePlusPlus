@@ -37,7 +37,7 @@ const std::map<String, CharacterDefinition::CharacterClass> CharacterDefinition:
 
 CharacterDefinition::CharacterDefinition()
 {
-	DICT_PATH = GetDictionaryPath();
+	DICT_PATH = MiscUtils::GetAsianDictionaryPath();
 	LuceneException priorE;
 
 	const String definitionFile = FileUtils::joinPath(DICT_PATH, FILENAME_CHARACTER_DEFINITION);

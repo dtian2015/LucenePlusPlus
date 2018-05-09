@@ -131,6 +131,27 @@ inline bool operator== (const Array<TYPE>& value1, const Array<TYPE>& value2) {
     return (value1.hashCode() == value2.hashCode());
 }
 
+template <typename TYPE>
+Array<TYPE> newArray(const TYPE& a)
+{
+	Array<TYPE> result = Array<TYPE>::newInstance(1);
+
+	result[0] = a;
+	return result;
+}
+
+template <typename TYPE>
+Array<TYPE> newArray(const TYPE& a1, const TYPE& a2, const TYPE& a3, const TYPE& a4)
+{
+	Array<TYPE> result = Array<TYPE>::newInstance(4);
+
+	result[0] = a1;
+	result[1] = a2;
+	result[2] = a3;
+	result[3] = a4;
+
+	return result;
+}
 }
 
 #endif

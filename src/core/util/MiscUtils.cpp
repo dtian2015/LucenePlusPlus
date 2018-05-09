@@ -175,4 +175,23 @@ void MiscUtils::SetEnvironmentVar(const std::string& variable, const std::string
 		throw std::runtime_error("Failed to set environment " + variable + " to " + value);
 	}
 }
+
+static const std::string DICT_ENVIRONMENT = "LUCENE_DICT_PATH";
+
+String MiscUtils::GetAsianDictionaryPath()
+{
+	const auto dictEnv = GetAsianDictionaryPathAsSingleString();
+	return String(dictEnv.begin(), dictEnv.end());
+}
+
+SingleString MiscUtils::GetAsianDictionaryPathAsSingleString()
+{
+	const SingleString dictEnv = GetEnvironmentVar(DICT_ENVIRONMENT);
+	if (dictEnv.empty())
+	{
+		boost::throw_exception(RuntimeException(L"Asian dictionary path is missing"));
+	}
+
+	return dictEnv;
+}
 }

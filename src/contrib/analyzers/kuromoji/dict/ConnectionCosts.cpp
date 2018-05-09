@@ -17,7 +17,7 @@ String ConnectionCosts::DICT_PATH;
 
 ConnectionCosts::ConnectionCosts()
 {
-	DICT_PATH = GetDictionaryPath();
+	DICT_PATH = MiscUtils::GetAsianDictionaryPath();
 	LuceneException priorE;
 	std::vector<std::vector<short>> costs;
 

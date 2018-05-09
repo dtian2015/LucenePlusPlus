@@ -1,6 +1,6 @@
 project(lucene++-tester)
 
-add_definitions(-DASIAN_DICT_DIR="${lucene++-contrib_SOURCE_DIR}/analyzers/kuromoji/resources")
+add_definitions(-DASIAN_DICT_DIR="${lucene++-contrib_SOURCE_DIR}/analyzers/resources")
 
 add_subdirectory(gtest)
 
@@ -46,6 +46,7 @@ add_dependencies(lucene++-tester
 )
 
 set(ZLIB_LINK_FLAGS -lz)
+set(ICONV_LINK_FLAGS -liconv)
 
 if (WIN32)
     set(ZLIB_LINK_FLAGS "")
@@ -55,6 +56,7 @@ endif()
 
 target_link_libraries(lucene++-tester
   ${ZLIB_LINK_FLAGS}
+  ${ICONV_LINK_FLAGS}
   ${CMAKE_THREAD_LIBS_INIT}
   lucene++
   lucene++-contrib

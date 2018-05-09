@@ -151,6 +151,10 @@ public:
 	 +	 * \param environment variable value
 	 +	 */
 	static void SetEnvironmentVar(const std::string& variable, const std::string& value);
+
+	static String GetAsianDictionaryPath();
+
+	static SingleString GetAsianDictionaryPathAsSingleString();
 };
 
 }
