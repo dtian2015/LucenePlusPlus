@@ -10,58 +10,58 @@
 namespace Lucene {
 
 TextFragment::TextFragment(const StringBufferPtr& markedUpText, int32_t textStartPos, int32_t fragNum) {
-    this->markedUpText = markedUpText;
-    this->textStartPos = textStartPos;
-    this->textEndPos = 0;
-    this->fragNum = fragNum;
-    this->score = 0;
+	this->markedUpText = markedUpText;
+	this->textStartPos = textStartPos;
+	this->textEndPos = 0;
+	this->fragNum = fragNum;
+	this->score = 0;
 }
 
 TextFragment::~TextFragment() {
 }
 
 void TextFragment::setScore(double score) {
-    this->score = score;
+	this->score = score;
 }
 
 double TextFragment::getScore() {
-    return score;
+	return score;
 }
 
 void TextFragment::merge(const TextFragmentPtr& frag2) {
-    textEndPos = frag2->textEndPos;
-    score = std::max(score, frag2->score);
+	textEndPos = frag2->textEndPos;
+	score = std::max(score, frag2->score);
 }
 
 bool TextFragment::follows(const TextFragmentPtr& fragment) {
-    return (textStartPos == fragment->textEndPos);
+	return (textStartPos == fragment->textEndPos);
 }
 
 int32_t TextFragment::getFragNum() {
-    return fragNum;
+	return fragNum;
 }
 
 String TextFragment::toString() {
-    return markedUpText->toString().substr(textStartPos, textEndPos - textStartPos);
+	return markedUpText->toString().substr(textStartPos, textEndPos - textStartPos);
 }
 
 StringBuffer::~StringBuffer() {
 }
 
 int32_t StringBuffer::length() {
-    return buffer.str().length();
+	return buffer.str().length();
 }
 
 String StringBuffer::toString() {
-    return buffer.str();
+	return buffer.str();
 }
 
 void StringBuffer::append(const String& str) {
-    buffer << str;
+	buffer << str;
 }
 
 void StringBuffer::clear() {
-    buffer.str(L"");
+	buffer.str(L"");
 }
 
 }

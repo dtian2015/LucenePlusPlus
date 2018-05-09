@@ -9,10 +9,10 @@
 
 #include "Lucene.h"
 
-#define DECLARE_SHARED_PTR(Type) \
-    class Type; \
-    typedef boost::shared_ptr<Type> Type##Ptr; \
-    typedef boost::weak_ptr<Type> Type##WeakPtr;
+#define DECLARE_SHARED_PTR(Type)                                                                                                           \
+	class Type;                                                                                                                            \
+	typedef boost::shared_ptr<Type> Type##Ptr;                                                                                             \
+	typedef boost::weak_ptr<Type> Type##WeakPtr;
 
 namespace Lucene {
 

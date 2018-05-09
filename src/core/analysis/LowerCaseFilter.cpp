@@ -12,19 +12,20 @@
 namespace Lucene {
 
 LowerCaseFilter::LowerCaseFilter(const TokenStreamPtr& input) : TokenFilter(input) {
-    termAtt = addAttribute<TermAttribute>();
+	termAtt = addAttribute<TermAttribute>();
 }
 
 LowerCaseFilter::~LowerCaseFilter() {
 }
 
 bool LowerCaseFilter::incrementToken() {
-    if (input->incrementToken()) {
-        wchar_t* buffer = termAtt->termBufferArray();
-        CharFolder::toLower(buffer, buffer + termAtt->termLength());
-        return true;
-    }
-    return false;
+	if (input->incrementToken())
+	{
+		wchar_t* buffer = termAtt->termBufferArray();
+		CharFolder::toLower(buffer, buffer + termAtt->termLength());
+		return true;
+	}
+	return false;
 }
 
 }

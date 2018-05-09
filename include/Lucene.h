@@ -97,55 +97,52 @@ typedef Array<double> DoubleArray;
 
 template <class TYPE>
 struct luceneEquals {
-    inline bool operator()(const TYPE& first, const TYPE& second) const {
-        return first ? first->equals(second) : (!first && !second);
-    }
+	inline bool operator()(const TYPE& first, const TYPE& second) const { return first ? first->equals(second) : (!first && !second); }
 };
 
 template <class TYPE>
 struct luceneEqualTo {
-    luceneEqualTo(const TYPE& type) : equalType(type) {}
-    inline bool operator()(const TYPE& other) const {
-        return equalType->equals(other);
-    }
-    const TYPE& equalType;
+	luceneEqualTo(const TYPE& type) : equalType(type) {}
+	inline bool operator()(const TYPE& other) const { return equalType->equals(other); }
+	const TYPE& equalType;
 };
 
 template <class TYPE>
 struct luceneWeakEquals {
-    inline bool operator()(const TYPE& first, const TYPE& second) const {
-        if (first.expired() || second.expired()) {
-            return (first.expired() && second.expired());
-        }
-        return first.lock()->equals(second.lock());
-    }
+	inline bool operator()(const TYPE& first, const TYPE& second) const
+	{
+		if (first.expired() || second.expired())
+		{
+			return (first.expired() && second.expired());
+		}
+		return first.lock()->equals(second.lock());
+	}
 };
 
 template <class TYPE>
 struct luceneHash : std::unary_function<TYPE, std::size_t> {
-    std::size_t operator()(const TYPE& type) const {
-        return type ? type->hashCode() : 0;
-    }
+	std::size_t operator()(const TYPE& type) const { return type ? type->hashCode() : 0; }
 };
 
 template <class TYPE>
 struct luceneWeakHash : std::unary_function<TYPE, std::size_t> {
-    std::size_t operator()(const TYPE& type) const {
-        return type.expired() ? 0 : type.lock()->hashCode();
-    }
+	std::size_t operator()(const TYPE& type) const { return type.expired() ? 0 : type.lock()->hashCode(); }
 };
 
 template <class TYPE>
 struct luceneCompare {
-    inline bool operator()(const TYPE& first, const TYPE& second) const {
-        if (!second) {
-            return false;
-        }
-        if (!first) {
-            return true;
-        }
-        return (first->compareTo(second) < 0);
-    }
+	inline bool operator()(const TYPE& first, const TYPE& second) const
+	{
+		if (!second)
+		{
+			return false;
+		}
+		if (!first)
+		{
+			return true;
+		}
+		return (first->compareTo(second) < 0);
+	}
 };
 
 typedef boost::blank VariantNull;
