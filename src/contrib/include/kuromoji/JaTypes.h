@@ -53,6 +53,14 @@ static String GetDictionaryPath()
 	return String(dictEnv.begin(), dictEnv.end());
 }
 }
+
+namespace TokenAttributes {
+
+DECLARE_SHARED_PTR(BaseFormAttribute)
+DECLARE_SHARED_PTR(InflectionAttribute)
+DECLARE_SHARED_PTR(PartOfSpeechAttribute)
+DECLARE_SHARED_PTR(ReadingAttribute)
+}
 }
 }
 }
