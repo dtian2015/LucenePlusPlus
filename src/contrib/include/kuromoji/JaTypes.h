@@ -8,8 +8,11 @@ namespace Analysis {
 namespace Ja {
 
 DECLARE_SHARED_PTR(GraphvizFormatter)
-DECLARE_SHARED_PTR(Token)
+DECLARE_SHARED_PTR(JapaneseAnalyzer)
+DECLARE_SHARED_PTR(JapaneseBaseFormFilter)
+DECLARE_SHARED_PTR(JapanesePartOfSpeechStopFilter)
 DECLARE_SHARED_PTR(JapaneseTokenizer)
+DECLARE_SHARED_PTR(Token)
 
 #define FSTLong Lucene::Util::FST::FST<Long>
 #define FSTArcLong Lucene::Util::FST::FST<Long>::Arc<Long>
