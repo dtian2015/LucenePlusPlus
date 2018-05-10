@@ -38,6 +38,20 @@ String _intToEnglish(int32_t i);
 /// This runs the CheckIndex tool on the index in.
 /// If any issues are hit, a RuntimeException is thrown; else, true is returned.
 bool checkIndex(const DirectoryPtr& dir);
+
+// both start and end are inclusive
+int nextInt(const RandomPtr& r, int start, int end);
+
+/// <summary>
+/// Returns a random string up to a certain length.
+/// </summary>
+String randomUnicodeString(const RandomPtr& r, int maxLength);
+
+/// <summary>
+/// Fills provided char[] with valid random unicode code
+/// unit sequence.
+/// </summary>
+void randomFixedLengthUnicodeString(const RandomPtr random, CharArray& chars, int offset, int length);
 }
 
 #endif

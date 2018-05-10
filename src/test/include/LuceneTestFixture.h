@@ -16,6 +16,10 @@ public:
 	void destructorBody();
 	/// teardown
 	virtual ~LuceneTestFixture();
+
+	int atLeast(int i);
+
+	int atLeast(const RandomPtr& random, int i);
 };
 
 }

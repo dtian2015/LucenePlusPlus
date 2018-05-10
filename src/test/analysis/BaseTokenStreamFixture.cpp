@@ -5,14 +5,23 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "TestInc.h"
-#include "BaseTokenStreamFixture.h"
-#include "TokenStream.h"
-#include "TermAttribute.h"
-#include "OffsetAttribute.h"
-#include "TypeAttribute.h"
-#include "PositionIncrementAttribute.h"
+
 #include "Analyzer.h"
+#include "BaseTokenStreamFixture.h"
+#include "CharTermAttribute.h"
+#include "FileReader.h"
+#include "FileUtils.h"
+#include "InputStreamReader.h"
+#include "OffsetAttribute.h"
+#include "PositionIncrementAttribute.h"
+#include "PositionLengthAttribute.h"
 #include "StringReader.h"
+#include "TestUtils.h"
+#include "TokenStream.h"
+#include "TypeAttribute.h"
+#include "kuromoji/dict/UserDictionary.h"
+
+using namespace Lucene::Analysis::Ja::Dict;
 
 namespace Lucene {
 
@@ -74,13 +83,21 @@ void BaseTokenStreamFixture::checkTokenStreamContents(
 	Collection<int32_t> endOffsets,
 	Collection<String> types,
 	Collection<int32_t> posIncrements,
-	int32_t finalOffset)
+	int32_t finalOffset,
+	Collection<int32_t> posLengths)
 {
 	EXPECT_TRUE(output);
 	CheckClearAttributesAttributePtr checkClearAtt = ts->addAttribute<CheckClearAttributesAttribute>();
 
-	EXPECT_TRUE(ts->hasAttribute<TermAttribute>());
-	TermAttributePtr termAtt = ts->getAttribute<TermAttribute>();
+	bool hasTermAttribute = ts->hasAttribute<TermAttribute>();
+	bool hasCharTermAttribute = ts->hasAttribute<CharTermAttribute>();
+
+	if (!hasCharTermAttribute)
+	{
+		EXPECT_TRUE(hasTermAttribute);
+	}
+
+	TermAttributePtr termAtt = hasCharTermAttribute ? ts->getAttribute<CharTermAttribute>() : ts->getAttribute<TermAttribute>();
 
 	OffsetAttributePtr offsetAtt;
 	if (startOffsets || endOffsets || finalOffset != -1)
@@ -103,6 +120,13 @@ void BaseTokenStreamFixture::checkTokenStreamContents(
 		posIncrAtt = ts->getAttribute<PositionIncrementAttribute>();
 	}
 
+	PositionLengthAttributePtr posLengthAtt;
+	if (posLengths)
+	{
+		EXPECT_TRUE(ts->hasAttribute<PositionLengthAttribute>());
+		posLengthAtt = ts->getAttribute<PositionLengthAttribute>();
+	}
+
 	ts->reset();
 	for (int32_t i = 0; i < output.size(); ++i)
 	{
@@ -120,6 +144,10 @@ void BaseTokenStreamFixture::checkTokenStreamContents(
 		if (posIncrAtt)
 		{
 			posIncrAtt->setPositionIncrement(45987657);
+		}
+		if (posLengthAtt)
+		{
+			posLengthAtt->setPositionLength(45987653);
 		}
 
 		checkClearAtt->getAndResetClearCalled(); // reset it, because we called clearAttribute() before
@@ -142,6 +170,34 @@ void BaseTokenStreamFixture::checkTokenStreamContents(
 		if (posIncrements)
 		{
 			EXPECT_EQ(posIncrements[i], posIncrAtt->getPositionIncrement());
+		}
+		if (posLengths)
+		{
+			EXPECT_EQ(posLengths[i], posLengthAtt->getPositionLength());
+		}
+
+		if (offsetAtt)
+		{
+			EXPECT_TRUE(offsetAtt->startOffset() >= 0);
+			EXPECT_TRUE(offsetAtt->endOffset() >= 0);
+			EXPECT_TRUE(offsetAtt->endOffset() >= offsetAtt->startOffset());
+		}
+
+		if (posIncrAtt)
+		{
+			if (i == 0)
+			{
+				EXPECT_TRUE(posIncrAtt->getPositionIncrement() >= 1);
+			}
+			else
+			{
+				EXPECT_TRUE(posIncrAtt->getPositionIncrement() >= 0);
+			}
+		}
+
+		if (posLengthAtt)
+		{
+			EXPECT_TRUE(posLengthAtt->getPositionLength() >= 1);
 		}
 	}
 	EXPECT_TRUE(!ts->incrementToken());
@@ -215,6 +271,18 @@ void BaseTokenStreamFixture::checkAnalyzesTo(const AnalyzerPtr& analyzer, const 
 	checkAnalyzesTo(analyzer, input, output, startOffsets, endOffsets, Collection<String>(), posIncrements);
 }
 
+void BaseTokenStreamFixture::checkAnalyzesToPositions(
+	const AnalyzerPtr& analyzer,
+	const String& input,
+	Collection<String> output,
+	Collection<int32_t> posIncrements,
+	Collection<int32_t> posLengths)
+{
+	checkTokenStreamContents(
+		analyzer->tokenStream(L"dummy", newLucene<StringReader>(input)), output, Collection<int32_t>(), Collection<int32_t>(),
+		Collection<String>(), posIncrements, static_cast<int32_t>(input.length()), posLengths);
+}
+
 void BaseTokenStreamFixture::checkAnalyzesToReuse(
 	const AnalyzerPtr& analyzer,
 	const String& input,
@@ -258,4 +326,29 @@ void BaseTokenStreamFixture::checkOneTermReuse(const AnalyzerPtr& analyzer, cons
 	checkAnalyzesToReuse(analyzer, input, newCollection<String>(expected));
 }
 
+UserDictionaryPtr BaseTokenStreamFixture::readDict()
+{
+	static UserDictionaryPtr result;
+
+	if (!result)
+	{
+		String dictFile = FileUtils::joinPath(getTestDir(), L"ja/userdict.txt");
+		if (!FileUtils::fileExists(dictFile))
+		{
+			boost::throw_exception(RuntimeException(L"Cannot find userdict.txt in test classpath!"));
+		}
+
+		try
+		{
+			InputStreamReaderPtr is = newLucene<InputStreamReader>(newLucene<FileReader>(dictFile));
+			result = newLucene<UserDictionary>(is);
+		}
+		catch (const IOException& ioe)
+		{
+			boost::throw_exception(RuntimeException(ioe.getError()));
+		}
+	}
+
+	return result;
+}
 }

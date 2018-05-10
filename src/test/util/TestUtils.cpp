@@ -206,4 +206,61 @@ bool checkIndex(const DirectoryPtr& dir) {
 	return true;
 }
 
+int nextInt(const RandomPtr& r, int start, int end)
+{
+	return start + r->nextInt(end - start + 1);
+}
+
+String randomUnicodeString(const RandomPtr& r, int maxLength)
+{
+	const int end = nextInt(r, 0, maxLength);
+	if (end == 0)
+	{
+		// allow 0 length
+		return L"";
+	}
+
+	CharArray buffer = CharArray::newInstance(end);
+	randomFixedLengthUnicodeString(r, buffer, 0, buffer.size());
+	return String(buffer.get(), end);
+}
+
+void randomFixedLengthUnicodeString(const RandomPtr random, CharArray& chars, int offset, int length)
+{
+	int i = offset;
+	const int end = offset + length;
+
+	while (i < end)
+	{
+		const int t = random->nextInt(5);
+		if (0 == t && i < length - 1)
+		{
+#ifdef LPP_UNICODE_CHAR_SIZE_2
+			// Make a surrogate pair
+			// High surrogate
+			chars[i++] = static_cast<wchar_t>(nextInt(random, 0xd800, 0xdbff));
+			// Low surrogate
+			chars[i++] = static_cast<wchar_t>(nextInt(random, 0xdc00, 0xdfff));
+#else
+			chars[i++] = static_cast<wchar_t>(nextInt(random, 0xdc00, 0xe000));
+#endif
+		}
+		else if (t <= 1)
+		{
+			chars[i++] = static_cast<wchar_t>(random->nextInt(0x80));
+		}
+		else if (2 == t)
+		{
+			chars[i++] = static_cast<wchar_t>(nextInt(random, 0x80, 0x7ff));
+		}
+		else if (3 == t)
+		{
+			chars[i++] = static_cast<wchar_t>(nextInt(random, 0x800, 0xd7ff));
+		}
+		else if (4 == t)
+		{
+			chars[i++] = static_cast<wchar_t>(nextInt(random, 0xe000, 0xfffe));
+		}
+	}
+}
 }

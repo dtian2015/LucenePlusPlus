@@ -7,8 +7,9 @@
 #ifndef BASETOKENSTREAMFIXTURE_H
 #define BASETOKENSTREAMFIXTURE_H
 
-#include "LuceneTestFixture.h"
 #include "Attribute.h"
+#include "LuceneTestFixture.h"
+#include "kuromoji/JaTypes.h"
 
 namespace Lucene {
 
@@ -48,7 +49,9 @@ public:
 		Collection<int32_t> endOffsets,
 		Collection<String> types,
 		Collection<int32_t> posIncrements,
-		int32_t finalOffset = -1);
+		int32_t finalOffset = -1,
+		Collection<int32_t> posLengths = Collection<int32_t>());
+
 	static void checkTokenStreamContents(const TokenStreamPtr& ts, Collection<String> output);
 	static void checkTokenStreamContents(const TokenStreamPtr& ts, Collection<String> output, Collection<String> types);
 	static void checkTokenStreamContents(const TokenStreamPtr& ts, Collection<String> output, Collection<int32_t> posIncrements);
@@ -100,6 +103,13 @@ public:
 		Collection<int32_t> endOffsets,
 		Collection<int32_t> posIncrements);
 
+	static void checkAnalyzesToPositions(
+		const AnalyzerPtr& analyzer,
+		const String& input,
+		Collection<String> output,
+		Collection<int32_t> posIncrements,
+		Collection<int32_t> posLengths);
+
 	static void checkAnalyzesToReuse(
 		const AnalyzerPtr& analyzer,
 		const String& input,
@@ -128,6 +138,8 @@ public:
 
 	static void checkOneTerm(const AnalyzerPtr& analyzer, const String& input, const String& expected);
 	static void checkOneTermReuse(const AnalyzerPtr& analyzer, const String& input, const String& expected);
+
+	static Analysis::Ja::Dict::UserDictionaryPtr readDict();
 };
 
 }
