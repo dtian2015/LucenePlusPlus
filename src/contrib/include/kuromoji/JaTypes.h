@@ -7,7 +7,9 @@ namespace Lucene {
 namespace Analysis {
 namespace Ja {
 
+DECLARE_SHARED_PTR(GraphvizFormatter)
 DECLARE_SHARED_PTR(Token)
+DECLARE_SHARED_PTR(JapaneseTokenizer)
 
 #define FSTLong Lucene::Util::FST::FST<Long>
 #define FSTArcLong Lucene::Util::FST::FST<Long>::Arc<Long>

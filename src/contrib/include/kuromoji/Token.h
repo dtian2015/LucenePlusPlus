@@ -1,20 +1,12 @@
 #pragma once
 
 #include "kuromoji/JaTypes.h"
-//#include "kuromoji/JapaneseTokenizer.h"    // TODO: Uncomment this once JapaneseTokenizer converted
+#include "kuromoji/JapaneseTokenizer.h"
 #include "kuromoji/dict/Dictionary.h"
 
 namespace Lucene {
 namespace Analysis {
 namespace Ja {
-
-// TODO: Use JapaneseTokenizer::Type once JapaneseTokenizer converted
-enum class Type
-{
-	KNOWN,
-	UNKNOWN,
-	USER
-};
 
 /// <summary>
 /// Analyzed token with morphological data from its dictionary.
@@ -33,15 +25,19 @@ private:
 	const int _position;
 	int _positionLength = 0;
 
-	// TODO: Uncomment following line once JapaneseTokenizer converted
-	//	const JapaneseTokenizer::Type _type;
-
-	const Type _type;
+	const JapaneseTokenizer::Type _type;
 
 public:
 	LUCENE_CLASS(Token);
 
-	Token(int wordId, CharArray surfaceForm, int offset, int length, Type type, int position, Dict::DictionaryPtr dictionary);
+	Token(
+		int wordId,
+		CharArray surfaceForm,
+		int offset,
+		int length,
+		JapaneseTokenizer::Type type,
+		int position,
+		Dict::DictionaryPtr dictionary);
 
 	virtual String toString();
 

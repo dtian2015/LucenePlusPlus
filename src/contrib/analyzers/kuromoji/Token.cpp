@@ -6,9 +6,8 @@ namespace Lucene {
 namespace Analysis {
 namespace Ja {
 
-const std::map<Type, String> TYPE_STRING_MAP = {{Type::KNOWN, L"Known"}, {Type::UNKNOWN, L"Unknown"}, {Type::USER, L"User"}};
-
-Token::Token(int wordId, CharArray surfaceForm, int offset, int length, Type type, int position, Dict::DictionaryPtr dictionary)
+Token::Token(
+	int wordId, CharArray surfaceForm, int offset, int length, JapaneseTokenizer::Type type, int position, Dict::DictionaryPtr dictionary)
 	: _dictionary(dictionary)
 	, _wordId(wordId)
 	, _surfaceForm(surfaceForm)
@@ -24,7 +23,8 @@ String Token::toString()
 	StringStream buffer;
 
 	buffer << L"Token(\"" << String(_surfaceForm.get() + _offset, _length) << L"\", pos=" << _position << L", type="
-		   << TYPE_STRING_MAP.at(_type) << L", wordId=" << _wordId << L", leftID=" << _dictionary->getLeftId(_wordId) << L")";
+		   << JapaneseTokenizer::TYPE_STRING_MAP.at(_type) << L", wordId=" << _wordId << L", leftID=" << _dictionary->getLeftId(_wordId)
+		   << L")";
 
 	return buffer.str();
 }
@@ -81,20 +81,17 @@ String Token::getBaseForm()
 
 bool Token::isKnown()
 {
-	// Use JapaneseTokenizer::Type once JapaneseTokenizer converted
-	return _type == Type::KNOWN;
+	return _type == JapaneseTokenizer::Type::KNOWN;
 }
 
 bool Token::isUnknown()
 {
-	// Use JapaneseTokenizer::Type once JapaneseTokenizer converted
-	return _type == Type::UNKNOWN;
+	return _type == JapaneseTokenizer::Type::UNKNOWN;
 }
 
 bool Token::isUser()
 {
-	// Use JapaneseTokenizer::Type once JapaneseTokenizer converted
-	return _type == Type::USER;
+	return _type == JapaneseTokenizer::Type::USER;
 }
 
 int Token::getPosition()
