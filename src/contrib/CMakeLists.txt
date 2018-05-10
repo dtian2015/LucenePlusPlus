@@ -28,7 +28,10 @@ link_directories(
   ${Boost_LIBRARY_DIRS}
 )
 
-install(FILES ${contrib_headers}
+install(
+  DIRECTORY 
+    ${lucene++-contrib_SOURCE_DIR}/include/ 
+    ${lucene++-contrib_SOURCE_DIR}/include/kuromoji
   DESTINATION
   include/lucene++
   COMPONENT development-contrib
