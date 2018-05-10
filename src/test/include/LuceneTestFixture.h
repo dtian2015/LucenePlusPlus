@@ -10,12 +10,12 @@ namespace Lucene {
 
 class LuceneTestFixture : public testing::Test {
 public:
-    /// setup
-    LuceneTestFixture();
+	/// setup
+	LuceneTestFixture();
 
-    void destructorBody();
-    /// teardown
-    virtual ~LuceneTestFixture();
+	void destructorBody();
+	/// teardown
+	virtual ~LuceneTestFixture();
 };
 
 }
