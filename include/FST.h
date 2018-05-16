@@ -2,10 +2,10 @@
 
 #include "CodecUtil.h"
 #include "FSDirectory.h"
+#include "FileIndexInputOutput.h"
 #include "IntsRef.h"
 #include "Outputs.h"
 #include "PriorityQueue.h"
-#include "_SimpleFSDirectory.h"
 
 #include <unordered_map>
 

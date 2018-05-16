@@ -4,8 +4,8 @@
 
 #include "CodecUtil.h"
 #include "FSDirectory.h"
+#include "FileIndexInputOutput.h"
 #include "FileUtils.h"
-#include "_SimpleFSDirectory.h"
 
 namespace Lucene {
 namespace Analysis {

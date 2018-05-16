@@ -2,9 +2,9 @@
 
 #include "CodecUtil.h"
 #include "FSDirectory.h"
+#include "FileIndexInputOutput.h"
 #include "FileUtils.h"
 #include "MiscUtils.h"
-#include "_SimpleFSDirectory.h"
 #include "kuromoji/dict/BinaryDictionary.h"
 
 namespace Lucene {

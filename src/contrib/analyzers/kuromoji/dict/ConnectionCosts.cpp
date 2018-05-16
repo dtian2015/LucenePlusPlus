@@ -2,8 +2,8 @@
 
 #include "CodecUtil.h"
 #include "FSDirectory.h"
+#include "FileIndexInputOutput.h"
 #include "FileUtils.h"
-#include "_SimpleFSDirectory.h"
 #include "kuromoji/dict/ConnectionCosts.h"
 
 namespace Lucene {
