@@ -5,22 +5,25 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "LuceneInc.h"
+
 #include "TermsHashPerField.h"
-#include "TermsHashPerThread.h"
-#include "TermsHashConsumerPerThread.h"
-#include "TermsHashConsumerPerField.h"
-#include "TermsHash.h"
-#include "TermAttribute.h"
+
 #include "AttributeSource.h"
+#include "ByteSliceReader.h"
+#include "CharBlockPool.h"
+#include "CharTermAttribute.h"
 #include "DocInverterPerField.h"
 #include "DocumentsWriter.h"
-#include "IntBlockPool.h"
-#include "CharBlockPool.h"
-#include "ByteSliceReader.h"
-#include "RawPostingList.h"
 #include "FieldInvertState.h"
-#include "UTF8Stream.h"
+#include "IntBlockPool.h"
 #include "MiscUtils.h"
+#include "RawPostingList.h"
+#include "TermAttribute.h"
+#include "TermsHash.h"
+#include "TermsHashConsumerPerField.h"
+#include "TermsHashConsumerPerThread.h"
+#include "TermsHashPerThread.h"
+#include "UTF8Stream.h"
 
 namespace Lucene {
 
@@ -199,7 +202,15 @@ bool TermsHashPerField::postingEquals(const wchar_t* tokenText, int32_t tokenTex
 }
 
 void TermsHashPerField::start(const FieldablePtr& field) {
-	termAtt = fieldState->attributeSource->addAttribute<TermAttribute>();
+	if (fieldState->attributeSource->hasAttribute<CharTermAttribute>())
+	{
+		termAtt = fieldState->attributeSource->addAttribute<CharTermAttribute>();
+	}
+	else
+	{
+		termAtt = fieldState->attributeSource->addAttribute<TermAttribute>();
+	}
+
 	consumer->start(field);
 	if (nextPerField)
 	{
