@@ -3,6 +3,8 @@
 #include "Lucene.h"
 #include "MiscUtils.h"
 
+#include <functional>
+
 namespace Lucene {
 namespace Analysis {
 namespace Ja {
@@ -16,6 +18,8 @@ DECLARE_SHARED_PTR(Token)
 
 #define FSTLong Lucene::Util::FST::FST<Long>
 #define FSTArcLong Lucene::Util::FST::FST<Long>::Arc<Long>
+
+typedef std::function<void(const String&, const String&)> UpdateCallbackFunc;
 
 template <typename T>
 T GetOutputValue(boost::shared_ptr<long> output)

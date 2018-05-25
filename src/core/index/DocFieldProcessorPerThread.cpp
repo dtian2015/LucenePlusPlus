@@ -8,23 +8,27 @@
 
 #include "DocFieldProcessorPerThread.h"
 
-#include "DocFieldProcessorPerField.h"
-#include "DocFieldProcessor.h"
+#include "Analyzer.h"
 #include "DocFieldConsumer.h"
-#include "DocFieldConsumerPerThread.h"
 #include "DocFieldConsumerPerField.h"
-#include "DocumentsWriterThreadState.h"
+#include "DocFieldConsumerPerThread.h"
+#include "DocFieldProcessor.h"
+#include "DocFieldProcessor.h"
+#include "DocFieldProcessorPerField.h"
+#include "DocFieldProcessorPerField.h"
+#include "Document.h"
 #include "DocumentsWriter.h"
-#include "StoredFieldsWriter.h"
-#include "StoredFieldsWriterPerThread.h"
-#include "SegmentWriteState.h"
+#include "DocumentsWriterThreadState.h"
+#include "Field.h"
 #include "FieldInfo.h"
 #include "FieldInfos.h"
 #include "Fieldable.h"
 #include "IndexWriter.h"
-#include "Document.h"
 #include "InfoStream.h"
 #include "MiscUtils.h"
+#include "SegmentWriteState.h"
+#include "StoredFieldsWriter.h"
+#include "StoredFieldsWriterPerThread.h"
 #include "StringUtils.h"
 
 namespace Lucene {
@@ -175,12 +179,22 @@ DocWriterPtr DocFieldProcessorPerThread::processDocument() {
 
 	Collection<FieldablePtr> docFields(doc->getFields());
 
+	// allow certain analyzer to do specific process for doc NOT containing ignored field
+	auto analyzer = docState->analyzer;
+	const String ignoredField = analyzer->getIgnoredDocField();
+	bool isSkippedDoc = false;
+
 	// Absorb any new fields first seen in this document.
 	// Also absorb any changes to fields we had already seen before (eg suddenly turning on norms or
 	// vectors, etc.)
 	for (Collection<FieldablePtr>::iterator field = docFields.begin(); field != docFields.end(); ++field)
 	{
 		String fieldName((*field)->name());
+
+		if (!ignoredField.empty() && fieldName == ignoredField)
+		{
+			isSkippedDoc = true;
+		}
 
 		// Make sure we have a PerField allocated
 		int32_t hashPos = StringUtils::hashCode(fieldName) & hashMask;
@@ -255,6 +269,28 @@ DocWriterPtr DocFieldProcessorPerThread::processDocument() {
 								<< L"Please correct the analyzer to not produce such terms.  The prefix of the first immense "
 								<< L"term is: '" << StringUtils::toString(docState->maxTermPrefix) << L"...'\n";
 		docState->maxTermPrefix.clear();
+	}
+
+	// certain analyzer might have extra field to be stored for non-skipped doc
+	auto extraFieldInfo = analyzer->getExtraStoredFieldInfo();
+	if (extraFieldInfo && !isSkippedDoc)
+	{
+		const auto& fieldNameAndValue = extraFieldInfo.value();
+		const String& fieldName = fieldNameAndValue.first;
+		const ByteArray& fieldValue = fieldNameAndValue.second;
+
+		if (!fieldName.empty() && fieldValue)
+		{
+			FieldPtr field = newLucene<Field>(fieldName, fieldValue, Field::STORE_YES);
+			doc->add(field);
+
+			FieldInfoPtr fi(fieldInfos->add(
+				field->name(), field->isIndexed(), field->isTermVectorStored(), field->isStorePositionWithTermVector(),
+				field->isStoreOffsetWithTermVector(), field->getOmitNorms(), false, field->getOmitTermFreqAndPositions()));
+			fieldsWriter->addField(field, fi);
+		}
+
+		analyzer->cleanup();
 	}
 
 	DocWriterPtr one(fieldsWriter->finishDocument());

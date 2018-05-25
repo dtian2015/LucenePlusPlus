@@ -24,11 +24,12 @@ private:
 	const CharTermAttributePtr _termAtt;
 	const TokenAttributes::BaseFormAttributePtr _basicFormAtt;
 	const KeywordAttributePtr _keywordAtt;
+	const UpdateCallbackFunc _callbackFunc;
 
 public:
 	LUCENE_CLASS(JapaneseBaseFormFilter);
 
-	JapaneseBaseFormFilter(TokenStreamPtr input);
+	JapaneseBaseFormFilter(TokenStreamPtr input, UpdateCallbackFunc callbackFunc = nullptr);
 
 	virtual bool incrementToken();
 };

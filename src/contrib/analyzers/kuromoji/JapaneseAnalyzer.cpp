@@ -9,9 +9,15 @@
 #include "kuromoji/JapaneseBaseFormFilter.h"
 #include "kuromoji/JapanesePartOfSpeechStopFilter.h"
 
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+
 namespace Lucene {
 namespace Analysis {
 namespace Ja {
+
+const String JapaneseAnalyzer::BASE_FORM_MAP_FIELD_NAME = L"BaseformMap";
+const String JapaneseAnalyzer::NODE_ID_FIELD_NAME = L"NodeId";
 
 JapaneseAnalyzer::JapaneseAnalyzer(LuceneVersion::Version matchVersion)
 	: JapaneseAnalyzer(
@@ -39,10 +45,47 @@ HashSet<String> JapaneseAnalyzer::getDefaultStopTags()
 	return DefaultSetHolder::DEFAULT_STOP_TAGS;
 }
 
+void JapaneseAnalyzer::cleanup()
+{
+	_baseformToWordsMap.clear();
+}
+
+boost::optional<std::pair<String, ByteArray>> JapaneseAnalyzer::getExtraStoredFieldInfo()
+{
+	if (_baseformToWordsMap.empty())
+	{
+		return boost::none;
+	}
+
+	// serialize basefrom to words mapping
+	std::stringstream ss;
+	boost::archive::binary_oarchive oa(ss);
+	oa << _baseformToWordsMap;
+
+	const std::string serializedText = ss.str();
+	ByteArray result = ByteArray::newInstance(serializedText.size());
+	MiscUtils::arrayCopy(serializedText.data(), 0, result.get(), 0, serializedText.length());
+
+	return std::make_pair(BASE_FORM_MAP_FIELD_NAME, result);
+}
+
+void JapaneseAnalyzer::AddBaseformWord(const String& baseform, const String& termText)
+{
+	if (baseform.empty() || termText.empty())
+	{
+		return;
+	}
+
+	_baseformToWordsMap[baseform].insert(termText);
+}
+
 ReusableAnalyzerBase::TokenStreamComponentsPtr JapaneseAnalyzer::createComponents(const String& fieldName, ReaderPtr reader)
 {
 	TokenizerPtr tokenizer = newLucene<JapaneseTokenizer>(reader, _userDict, true, _mode);
-	TokenStreamPtr stream = newLucene<JapaneseBaseFormFilter>(tokenizer);
+
+	// The callback would allow baseform->term mapping to be stored before term being replaced by baseform filter
+	UpdateCallbackFunc updateCallback = std::bind(&JapaneseAnalyzer::AddBaseformWord, this, std::placeholders::_1, std::placeholders::_2);
+	TokenStreamPtr stream = newLucene<JapaneseBaseFormFilter>(tokenizer, updateCallback);
 	stream = newLucene<JapanesePartOfSpeechStopFilter>(true, stream, _stoptags);
 	stream = newLucene<Cjk::CJKWidthFilter>(stream);
 	stream = newLucene<LowerCaseFilter>(stream);
