@@ -162,6 +162,6 @@ CharTermAttributePtr CharTermAttribute::appendNull()
 
 String CharTermAttribute::toString()
 {
-	return String(_termBuffer.get(), _termBuffer.size());
+	return String(_termBuffer.get(), _termLength);
 }
 }
