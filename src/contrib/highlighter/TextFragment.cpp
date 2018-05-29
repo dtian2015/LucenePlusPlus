@@ -48,8 +48,9 @@ String TextFragment::toString() {
 StringBuffer::~StringBuffer() {
 }
 
-int32_t StringBuffer::length() {
-	return buffer.str().length();
+int32_t StringBuffer::length() const
+{
+	return _length;
 }
 
 String StringBuffer::toString() {
@@ -58,15 +59,18 @@ String StringBuffer::toString() {
 
 void StringBuffer::append(const String& str) {
 	buffer << str;
+	_length += str.length();
 }
 
 void StringBuffer::append(const wchar_t& c)
 {
 	buffer << c;
+	++_length;
 }
 
 void StringBuffer::clear() {
 	buffer.str(L"");
+	_length = 0;
 }
 
 }

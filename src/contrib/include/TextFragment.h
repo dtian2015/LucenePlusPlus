@@ -55,10 +55,13 @@ protected:
 
 public:
 	virtual String toString();
-	virtual int32_t length();
+	virtual int32_t length() const;
 	virtual void append(const String& str);
 	virtual void append(const wchar_t& c);
 	virtual void clear();
+
+private:
+	int32_t _length = 0;
 };
 
 }
