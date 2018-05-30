@@ -25,13 +25,29 @@ JapaneseAnalyzer::JapaneseAnalyzer(LuceneVersion::Version matchVersion)
 {
 }
 
+JapaneseAnalyzer::JapaneseAnalyzer(LuceneVersion::Version matchVersion, const HashSet<String>& stopwordsIn, bool discardPunctuation)
+	: JapaneseAnalyzer(
+		  matchVersion,
+		  nullptr,
+		  JapaneseTokenizer::DEFAULT_MODE,
+		  stopwordsIn,
+		  (stopwordsIn.empty() ? HashSet<String>::newInstance() : DefaultSetHolder::DEFAULT_STOP_TAGS),
+		  discardPunctuation)
+{
+}
+
 JapaneseAnalyzer::JapaneseAnalyzer(
 	LuceneVersion::Version matchVersion,
 	Dict::UserDictionaryPtr userDict,
 	JapaneseTokenizer::Mode mode,
 	const HashSet<String>& stopwords,
-	const HashSet<String>& stoptags)
-	: StopwordAnalyzerBase(matchVersion, stopwords), _mode(mode), _stoptags(stoptags), _userDict(userDict)
+	const HashSet<String>& stoptags,
+	bool discardPunctuation)
+	: StopwordAnalyzerBase(matchVersion, stopwords)
+	, _mode(mode)
+	, _stoptags(stoptags)
+	, _userDict(userDict)
+	, _discardPunctuation(discardPunctuation)
 {
 }
 
@@ -81,18 +97,26 @@ void JapaneseAnalyzer::AddBaseformWord(const String& baseform, const String& ter
 
 ReusableAnalyzerBase::TokenStreamComponentsPtr JapaneseAnalyzer::createComponents(const String& fieldName, ReaderPtr reader)
 {
-	TokenizerPtr tokenizer = newLucene<JapaneseTokenizer>(reader, _userDict, true, _mode);
+	TokenizerPtr tokenizer = newLucene<JapaneseTokenizer>(reader, _userDict, _discardPunctuation, _mode);
 
 	// The callback would allow baseform->term mapping to be stored before term being replaced by baseform filter
 	UpdateCallbackFunc updateCallback = std::bind(&JapaneseAnalyzer::AddBaseformWord, this, std::placeholders::_1, std::placeholders::_2);
 	TokenStreamPtr stream = newLucene<JapaneseBaseFormFilter>(tokenizer, updateCallback);
-	stream = newLucene<JapanesePartOfSpeechStopFilter>(true, stream, _stoptags);
+
+	if (!_stoptags.empty())
+	{
+		stream = newLucene<JapanesePartOfSpeechStopFilter>(true, stream, _stoptags);
+	}
+
 	stream = newLucene<Cjk::CJKWidthFilter>(stream, updateCallback);
 	stream = newLucene<LowerCaseFilter>(stream);
 
 	//	stream = std::make_shared<JapaneseKatakanaStemFilter>(stream);
 
-	stream = newLucene<StopFilter>(StopFilter::getEnablePositionIncrementsVersionDefault(matchVersion), stream, stopwords);
+	if (!stopwords.empty())
+	{
+		stream = newLucene<StopFilter>(StopFilter::getEnablePositionIncrementsVersionDefault(matchVersion), stream, stopwords);
+	}
 
 	return newLucene<TokenStreamComponents>(tokenizer, stream);
 }

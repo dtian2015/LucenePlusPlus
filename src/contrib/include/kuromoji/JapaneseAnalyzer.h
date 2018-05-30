@@ -31,12 +31,15 @@ public:
 
 	JapaneseAnalyzer(LuceneVersion::Version matchVersion);
 
+	JapaneseAnalyzer(LuceneVersion::Version matchVersion, const HashSet<String>& stopwords, bool discardPunctuation = true);
+
 	JapaneseAnalyzer(
 		LuceneVersion::Version matchVersion,
 		Dict::UserDictionaryPtr userDict,
 		JapaneseTokenizer::Mode mode,
 		const HashSet<String>& stopwords,
-		const HashSet<String>& stoptags);
+		const HashSet<String>& stoptags,
+		bool discardPunctuation = true);
 
 	static HashSet<String> getDefaultStopSet();
 
@@ -79,6 +82,7 @@ private:
 	};
 
 	BaseformToWordsMap _baseformToWordsMap;
+	bool _discardPunctuation = true;
 
 protected:
 	TokenStreamComponentsPtr createComponents(const String& fieldName, ReaderPtr reader);

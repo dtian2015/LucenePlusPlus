@@ -29,6 +29,13 @@ TEST_F(TestJapaneseAnalyzer, testBasics)
 		newCollection<int32_t>(2, 5, 8, 11), newCollection<int32_t>(1, 2, 2, 2));
 }
 
+TEST_F(TestJapaneseAnalyzer, testBasicsWithoutStopWordsKeepingPunctuation)
+{
+	checkAnalyzesTo(
+		newLucene<JapaneseAnalyzer>(TEST_VERSION_CURRENT, HashSet<String>::newInstance(), false), L"多くの学生が試験に落ちた。",
+		newCollection<String>(L"多く", L"の", L"学生", L"が", L"試験", L"に", L"落ちる", L"た", L"。"));
+}
+
 TEST_F(TestJapaneseAnalyzer, testWeirdJapaneseNumberBaseFormMap)
 {
 	JapaneseAnalyzerPtr analyzer = newLucene<JapaneseAnalyzer>(TEST_VERSION_CURRENT);
