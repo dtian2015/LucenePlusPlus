@@ -1,6 +1,8 @@
 #pragma once
 
 #include "TokenFilter.h"
+#include "kuromoji/JaTypes.h"
+
 #include <vector>
 
 namespace Lucene {
@@ -32,10 +34,12 @@ private:
 	 */
 	static std::vector<wchar_t> const KANA_NORM;
 
+	const Ja::UpdateCallbackFunc _callbackFunc;
+
 public:
 	LUCENE_CLASS(CJKWidthFilter);
 
-	CJKWidthFilter(TokenStreamPtr input);
+	CJKWidthFilter(TokenStreamPtr input, Ja::UpdateCallbackFunc callbackFunc = nullptr);
 
 	virtual bool incrementToken();
 

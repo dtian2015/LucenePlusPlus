@@ -29,6 +29,24 @@ TEST_F(TestJapaneseAnalyzer, testBasics)
 		newCollection<int32_t>(2, 5, 8, 11), newCollection<int32_t>(1, 2, 2, 2));
 }
 
+TEST_F(TestJapaneseAnalyzer, testWeirdJapaneseNumberBaseFormMap)
+{
+	JapaneseAnalyzerPtr analyzer = newLucene<JapaneseAnalyzer>(TEST_VERSION_CURRENT);
+
+	checkAnalyzesTo(analyzer, L"４４Ｋ", newCollection<String>(L"4", L"4", L"k"));
+
+	const auto& map = analyzer->getBaseformMap();
+	ASSERT_EQ(2, map.size());
+
+	const auto& entry4 = map.find(L"4");
+	ASSERT_TRUE(entry4 != map.end());
+	EXPECT_TRUE(entry4->second.count(L"４") == 1);
+
+	const auto& entryk = map.find(L"K");
+	ASSERT_TRUE(entryk != map.end());
+	EXPECT_TRUE(entryk->second.count(L"Ｋ") == 1);
+}
+
 TEST_F(TestJapaneseAnalyzer, testDecomposition)
 {
 	AnalyzerPtr const a = newLucene<JapaneseAnalyzer>(

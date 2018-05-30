@@ -10,6 +10,8 @@ namespace Lucene {
 namespace Analysis {
 namespace Ja {
 
+typedef std::unordered_map<String, std::unordered_set<String>> BaseformToWordsMap;
+
 /// <summary>
 /// Analyzer for Japanese that uses morphological analysis. </summary>
 /// <seealso cref= JapaneseTokenizer </seealso>
@@ -50,6 +52,7 @@ public:
 	virtual String getIgnoredDocField() const { return NODE_ID_FIELD_NAME; }
 	void AddBaseformWord(const String& baseform, const String& termText);
 
+	const BaseformToWordsMap& getBaseformMap() const { return _baseformToWordsMap; }
 private:
 	/// <summary>
 	/// Atomically loads DEFAULT_STOP_SET, DEFAULT_STOP_TAGS in a lazy fashion once the
@@ -75,7 +78,7 @@ private:
 		static DefaultSetHolder::StaticConstructor staticConstructor;
 	};
 
-	std::unordered_map<String, std::unordered_set<String>> _baseformToWordsMap;
+	BaseformToWordsMap _baseformToWordsMap;
 
 protected:
 	TokenStreamComponentsPtr createComponents(const String& fieldName, ReaderPtr reader);

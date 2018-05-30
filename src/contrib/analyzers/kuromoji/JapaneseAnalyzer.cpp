@@ -87,7 +87,7 @@ ReusableAnalyzerBase::TokenStreamComponentsPtr JapaneseAnalyzer::createComponent
 	UpdateCallbackFunc updateCallback = std::bind(&JapaneseAnalyzer::AddBaseformWord, this, std::placeholders::_1, std::placeholders::_2);
 	TokenStreamPtr stream = newLucene<JapaneseBaseFormFilter>(tokenizer, updateCallback);
 	stream = newLucene<JapanesePartOfSpeechStopFilter>(true, stream, _stoptags);
-	stream = newLucene<Cjk::CJKWidthFilter>(stream);
+	stream = newLucene<Cjk::CJKWidthFilter>(stream, updateCallback);
 	stream = newLucene<LowerCaseFilter>(stream);
 
 	//	stream = std::make_shared<JapaneseKatakanaStemFilter>(stream);

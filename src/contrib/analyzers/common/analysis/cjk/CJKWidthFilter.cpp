@@ -42,7 +42,8 @@ const std::vector<char> CJKWidthFilter::KANA_COMBINE_HALF_VOICED = std::vector<c
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0,
 	2, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-CJKWidthFilter::CJKWidthFilter(TokenStreamPtr input) : TokenFilter(input), _termAtt(addAttribute<CharTermAttribute>())
+CJKWidthFilter::CJKWidthFilter(TokenStreamPtr input, Ja::UpdateCallbackFunc callbackFunc)
+	: TokenFilter(input), _termAtt(addAttribute<CharTermAttribute>()), _callbackFunc(callbackFunc)
 {
 }
 
@@ -50,6 +51,9 @@ bool CJKWidthFilter::incrementToken()
 {
 	if (input->incrementToken())
 	{
+		const String& original = _termAtt->toString();
+		bool termChanged = false;
+
 		CharArray text = _termAtt->buffer();
 		int length = _termAtt->length();
 		for (int i = 0; i < length; i++)
@@ -59,6 +63,7 @@ bool CJKWidthFilter::incrementToken()
 			{
 				// Fullwidth ASCII variants
 				text[i] -= 0xFEE0;
+				termChanged = true;
 			}
 			else if (ch >= 0xFF65 && ch <= 0xFF9F)
 			{
@@ -66,15 +71,23 @@ bool CJKWidthFilter::incrementToken()
 				if ((ch == 0xFF9E || ch == 0xFF9F) && i > 0 && combine(text, i, ch))
 				{
 					length = deleteCharacter(text, i--, length);
+					termChanged = true;
 				}
 				else
 				{
 					text[i] = KANA_NORM[ch - 0xFF65];
+					termChanged = true;
 				}
 			}
 		}
 
 		_termAtt->setLength(length);
+
+		if (termChanged)
+		{
+			_callbackFunc(_termAtt->toString(), original);
+		}
+
 		return true;
 	}
 	else
