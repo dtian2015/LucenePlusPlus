@@ -60,6 +60,7 @@ target_link_libraries(lucene++-tester
   lucene++-contrib
   gtest
   ${lucene_boost_libs}
+  ${ZLIB_LIBRARY}
 )
 
 cotire(lucene++-tester)

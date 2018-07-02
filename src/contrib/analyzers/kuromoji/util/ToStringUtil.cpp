@@ -1,4 +1,4 @@
-#include "kuromoji/util/ToStringUtil.h"
+﻿#include "kuromoji/util/ToStringUtil.h"
 #include "MiscUtils.h"
 
 namespace Lucene {

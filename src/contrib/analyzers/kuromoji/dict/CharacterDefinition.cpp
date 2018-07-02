@@ -7,6 +7,8 @@
 #include "FileIndexInputOutput.h"
 #include "FileUtils.h"
 
+#include <cwctype>
+
 namespace Lucene {
 namespace Analysis {
 namespace Ja {

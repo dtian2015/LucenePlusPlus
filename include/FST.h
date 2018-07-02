@@ -568,7 +568,7 @@ public:
 		}
 		const int prefixLenPlus1 = pos1 + 1;
 
-		int originalSize = _frontier.size();
+		int originalSize = static_cast<int>(_frontier.size());
 		if (originalSize < input->length + 1)
 		{
 			_frontier.resize(input->length + 1);
@@ -1671,8 +1671,8 @@ public:
 			// Nodes are addressed by 1+ord:
 			if (nodeCount == nodeAddress.size())
 			{
-				nodeAddress.resize(MiscUtils::getNextSize(nodeAddress.size() + 1));
-				inCounts.resize(MiscUtils::getNextSize(inCounts.size() + 1));
+				nodeAddress.resize(MiscUtils::getNextSize(static_cast<int32_t>(nodeAddress.size()) + 1));
+				inCounts.resize(MiscUtils::getNextSize(static_cast<int32_t>(inCounts.size()) + 1));
 			}
 
 			nodeAddress[nodeCount] = endAddress;
@@ -3050,7 +3050,7 @@ private:
 	{
 		const std::vector<int> oldTable = _table;
 		_table = std::vector<int>(2 * _table.size());
-		_mask = _table.size() - 1;
+		_mask = static_cast<int>(_table.size()) - 1;
 
 		for (int idx = 0; idx < oldTable.size(); idx++)
 		{
