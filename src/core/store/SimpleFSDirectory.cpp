@@ -4,14 +4,14 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
-#include <boost/filesystem/fstream.hpp>
 #include "SimpleFSDirectory.h"
-#include "_SimpleFSDirectory.h"
-#include "IndexOutput.h"
+#include "FileIndexInputOutput.h"
 #include "FileReader.h"
 #include "FileUtils.h"
+#include "IndexOutput.h"
+#include "LuceneInc.h"
 #include "StringUtils.h"
+#include <boost/filesystem/fstream.hpp>
 
 namespace Lucene {
 

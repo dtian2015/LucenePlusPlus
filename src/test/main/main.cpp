@@ -30,40 +30,50 @@
 using namespace Lucene;
 
 int main(int argc, char* argv[]) {
-    String testDir;
+	String testDir;
 
-    for (int32_t i = 0; i < argc; ++i) {
-        if (strncmp(argv[i], "--test_dir", 9) == 0) {
-            String testParam = StringUtils::toUnicode(argv[i]);
-            Collection<String> vals = StringUtils::split(testParam, L"=");
-            if (vals.size() == 2) {
-                testDir = vals[1];
-                boost::replace_all(testDir, L"\"", L"");
-                boost::trim(testDir);
-                break;
-            }
-        }
-    }
+	for (int32_t i = 0; i < argc; ++i)
+	{
+		if (strncmp(argv[i], "--test_dir", 9) == 0)
+		{
+			String testParam = StringUtils::toUnicode(argv[i]);
+			Collection<String> vals = StringUtils::split(testParam, L"=");
+			if (vals.size() == 2)
+			{
+				testDir = vals[1];
+				boost::replace_all(testDir, L"\"", L"");
+				boost::trim(testDir);
+				break;
+			}
+		}
+	}
 
-    if (testDir.empty()) {
-        testDir = L"../../src/test/testfiles";
-        if (!FileUtils::isDirectory(testDir)) {
-            testDir = L"../src/test/testfiles";
-            if (!FileUtils::isDirectory(testDir)) {
-                testDir = L"./src/test/testfiles";
-            }
-        }
-    }
+	if (testDir.empty())
+	{
+		testDir = L"../../src/test/testfiles";
+		if (!FileUtils::isDirectory(testDir))
+		{
+			testDir = L"../src/test/testfiles";
+			if (!FileUtils::isDirectory(testDir))
+			{
+				testDir = L"./src/test/testfiles";
+			}
+		}
+	}
 
-    if (!FileUtils::isDirectory(testDir)) {
-        std::wcout << L"Test directory not found. (override default by using --test_dir=\"./src/test/testfiles\")\n";
-        return 1;
-    }
+	if (!FileUtils::isDirectory(testDir))
+	{
+		std::wcout << L"Test directory not found. (override default by using --test_dir=\"./src/test/testfiles\")\n";
+		return 1;
+	}
 
-    setTestDir(testDir);
+	setTestDir(testDir);
 
-    testing::InitGoogleTest(&argc, argv);
-    testing::AddGlobalTestEnvironment(new LuceneGlobalFixture());
+	// set dictionary environment
+	MiscUtils::SetEnvironmentVar("LUCENE_DICT_PATH", ASIAN_DICT_DIR);
 
-    return RUN_ALL_TESTS();
+	testing::InitGoogleTest(&argc, argv);
+	testing::AddGlobalTestEnvironment(new LuceneGlobalFixture());
+
+	return RUN_ALL_TESTS();
 }

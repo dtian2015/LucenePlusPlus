@@ -4,14 +4,14 @@
 // or the GNU Lesser General Public License.
 /////////////////////////////////////////////////////////////////////////////
 
-#include "LuceneInc.h"
 #include "MMapDirectory.h"
-#include "_MMapDirectory.h"
-#include "SimpleFSDirectory.h"
-#include "_SimpleFSDirectory.h"
-#include "MiscUtils.h"
+#include "FileIndexInputOutput.h"
 #include "FileUtils.h"
+#include "LuceneInc.h"
+#include "MiscUtils.h"
+#include "SimpleFSDirectory.h"
 #include "StringUtils.h"
+#include "_MMapDirectory.h"
 
 namespace Lucene {
 

@@ -5,17 +5,18 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "TestInc.h"
-#include "LuceneTestFixture.h"
-#include "TestUtils.h"
-#include "SimpleFSDirectory.h"
-#include "_SimpleFSDirectory.h"
-#include "IndexOutput.h"
-#include "IndexInput.h"
-#include "CompoundFileWriter.h"
+
 #include "CompoundFileReader.h"
-#include "Random.h"
-#include "MiscUtils.h"
+#include "CompoundFileWriter.h"
+#include "FileIndexInputOutput.h"
 #include "FileUtils.h"
+#include "IndexInput.h"
+#include "IndexOutput.h"
+#include "LuceneTestFixture.h"
+#include "MiscUtils.h"
+#include "Random.h"
+#include "SimpleFSDirectory.h"
+#include "TestUtils.h"
 
 using namespace Lucene;
 

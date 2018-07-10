@@ -9,10 +9,10 @@
 
 #include "Lucene.h"
 
-#define DECLARE_SHARED_PTR(Type) \
-    class Type; \
-    typedef boost::shared_ptr<Type> Type##Ptr; \
-    typedef boost::weak_ptr<Type> Type##WeakPtr;
+#define DECLARE_SHARED_PTR(Type)                                                                                                           \
+	class Type;                                                                                                                            \
+	typedef boost::shared_ptr<Type> Type##Ptr;                                                                                             \
+	typedef boost::weak_ptr<Type> Type##WeakPtr;
 
 namespace Lucene {
 
@@ -25,10 +25,15 @@ DECLARE_SHARED_PTR(CharArraySet)
 DECLARE_SHARED_PTR(CharFilter)
 DECLARE_SHARED_PTR(CharReader)
 DECLARE_SHARED_PTR(CharStream)
+DECLARE_SHARED_PTR(CharTermAttribute)
 DECLARE_SHARED_PTR(CharTokenizer)
+DECLARE_SHARED_PTR(DataInput)
+DECLARE_SHARED_PTR(DataOutput)
+DECLARE_SHARED_PTR(FilteringTokenFilter)
 DECLARE_SHARED_PTR(FlagsAttribute)
 DECLARE_SHARED_PTR(ISOLatin1AccentFilter)
 DECLARE_SHARED_PTR(KeywordAnalyzer)
+DECLARE_SHARED_PTR(KeywordAttribute)
 DECLARE_SHARED_PTR(KeywordTokenizer)
 DECLARE_SHARED_PTR(LengthFilter)
 DECLARE_SHARED_PTR(LetterTokenizer)
@@ -543,9 +548,11 @@ DECLARE_SHARED_PTR(NumericUtils)
 DECLARE_SHARED_PTR(OpenBitSet)
 DECLARE_SHARED_PTR(OpenBitSetDISI)
 DECLARE_SHARED_PTR(OpenBitSetIterator)
+DECLARE_SHARED_PTR(PositionLengthAttribute)
 DECLARE_SHARED_PTR(Random)
 DECLARE_SHARED_PTR(Reader)
 DECLARE_SHARED_PTR(ReaderField)
+DECLARE_SHARED_PTR(RollingCharBuffer)
 DECLARE_SHARED_PTR(ScorerDocQueue)
 DECLARE_SHARED_PTR(SortedVIntList)
 DECLARE_SHARED_PTR(StringReader)
@@ -558,6 +565,16 @@ DECLARE_SHARED_PTR(UTF8Encoder)
 DECLARE_SHARED_PTR(UTF8EncoderStream)
 DECLARE_SHARED_PTR(UTF8Result)
 DECLARE_SHARED_PTR(UTF16Decoder)
+
+namespace Util {
+
+DECLARE_SHARED_PTR(IntsRef)
+
+namespace FST {
+
+DECLARE_SHARED_PTR(PositiveIntOutputs)
+}
+}
 }
 
 #endif

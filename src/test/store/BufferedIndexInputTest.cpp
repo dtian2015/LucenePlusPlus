@@ -5,26 +5,27 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "TestInc.h"
-#include <fstream>
-#include "LuceneTestFixture.h"
-#include "TestUtils.h"
+
 #include "BufferedIndexInput.h"
-#include "_SimpleFSDirectory.h"
-#include "MockFSDirectory.h"
+#include "Document.h"
 #include "FSDirectory.h"
-#include "IndexWriter.h"
+#include "Field.h"
+#include "FileIndexInputOutput.h"
+#include "FileUtils.h"
 #include "IndexReader.h"
 #include "IndexSearcher.h"
-#include "WhitespaceAnalyzer.h"
-#include "Document.h"
-#include "Field.h"
+#include "IndexWriter.h"
+#include "LuceneTestFixture.h"
+#include "MiscUtils.h"
+#include "MockFSDirectory.h"
+#include "Random.h"
+#include "ScoreDoc.h"
 #include "Term.h"
 #include "TermQuery.h"
-#include "ScoreDoc.h"
+#include "TestUtils.h"
 #include "TopDocs.h"
-#include "Random.h"
-#include "MiscUtils.h"
-#include "FileUtils.h"
+#include "WhitespaceAnalyzer.h"
+#include <fstream>
 
 using namespace Lucene;
 

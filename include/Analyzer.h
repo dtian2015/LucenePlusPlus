@@ -9,6 +9,8 @@
 
 #include "CloseableThreadLocal.h"
 
+#include <boost/optional.hpp>
+
 namespace Lucene {
 
 /// An Analyzer builds TokenStreams, which analyze text.  It thus represents a policy for extracting index terms
@@ -55,6 +57,14 @@ public:
     /// Frees persistent resources used by this Analyzer
     virtual void close();
 
+	/// A hook that subclass might override to do some cleanup (eg. before reset analyzer) if necessary
+	virtual void cleanup(){};
+
+	// A hook that subclass might override to return an extra field name and value to be stored (eg. after all other
+	// indexed fields are processed)
+	virtual boost::optional<std::pair<String, ByteArray>> getExtraStoredFieldInfo() { return boost::none; };
+	// A hook that subclass might choose to override (eg. certain operation might be skipped if the doc contains ignored field)
+	virtual String getIgnoredDocField() const { return L""; };
 protected:
     /// Used by Analyzers that implement reusableTokenStream to retrieve previously saved TokenStreams for re-use
     /// by the same thread.
