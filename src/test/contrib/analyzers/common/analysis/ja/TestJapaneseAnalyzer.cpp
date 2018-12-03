@@ -36,6 +36,16 @@ TEST_F(TestJapaneseAnalyzer, testBasicsWithoutStopWordsKeepingPunctuation)
 		newCollection<String>(L"多く", L"の", L"学生", L"が", L"試験", L"に", L"落ちる", L"た", L"。"));
 }
 
+TEST_F(TestJapaneseAnalyzer, testBasicsWithStopTags)
+{
+	std::set<Lucene::String> stopWords = {L"また"};
+
+	// stop tags ('じゃ' and 'あ' in this case) should never be filtered out
+	checkAnalyzesTo(
+		newLucene<JapaneseAnalyzer>(TEST_VERSION_CURRENT, HashSet<String>::newInstance(stopWords.begin(), stopWords.end()), true),
+		L"じゃあまた", newCollection<String>(L"じゃ", L"あ"));
+}
+
 TEST_F(TestJapaneseAnalyzer, testWeirdJapaneseNumberBaseFormMap)
 {
 	JapaneseAnalyzerPtr analyzer = newLucene<JapaneseAnalyzer>(TEST_VERSION_CURRENT);

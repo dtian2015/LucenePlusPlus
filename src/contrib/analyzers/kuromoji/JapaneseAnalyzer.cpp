@@ -31,7 +31,7 @@ JapaneseAnalyzer::JapaneseAnalyzer(LuceneVersion::Version matchVersion, const Ha
 		  nullptr,
 		  JapaneseTokenizer::DEFAULT_MODE,
 		  stopwordsIn,
-		  (stopwordsIn.empty() ? HashSet<String>::newInstance() : DefaultSetHolder::DEFAULT_STOP_TAGS),
+		  HashSet<String>::newInstance(), // Never filter out stop tags
 		  discardPunctuation)
 {
 }
